@@ -4,15 +4,24 @@ const refs = {
   stopBtn: document.querySelector('[data-stop]'),
 };
 
-let intervalID;
-// = setInterval(onClickStart, 1000)
+let intervalID = null;
+let colorBg = null;
+
 function onClickStart() {
-  let colorBg = getRandomHexColor();
-  refs.bodyBg.style.backgroundColor = `${colorBg}`;
+  intervalID = setInterval(changeColor, 1000);
+  refs.startBtn.setAttribute(`disabled`, true);
+  refs.stopBtn.removeAttribute(`disabled`);
 }
 
 function onClickStop() {
-  clearTimeout(timerId);
+  clearTimeout(intervalID);
+  refs.stopBtn.setAttribute(`disabled`, true);
+  refs.startBtn.removeAttribute(`disabled`);
+}
+
+function changeColor() {
+  colorBg = getRandomHexColor();
+  refs.bodyBg.style.backgroundColor = `${colorBg}`;
 }
 
 function getRandomHexColor() {
