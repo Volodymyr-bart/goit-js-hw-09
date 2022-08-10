@@ -16,3 +16,12 @@ img {
   display: block;
   max-width: 100%;
 }
+
+.timer {
+  display: flex;
+  margin-top: 20px;
+}
+
+.field + .field {
+  margin-left: 15px;
+}
