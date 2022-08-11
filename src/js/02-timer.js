@@ -40,8 +40,8 @@ const timer = new Timer({ onTick: updateClockFace });
 
 refs.startBtn.addEventListener('click', timer.start());
 
-function updateClockFace(deltaTime) {
-  const { days, hours, minutes, seconds } = deltaTime;
+function updateClockFace(time) {
+  const { days, hours, minutes, seconds } = time;
   refs.dDays.textContent = `${days}`;
   refs.dHours.textContent = `${hours}`;
   refs.dMinutes.textContent = `${minutes}`;
