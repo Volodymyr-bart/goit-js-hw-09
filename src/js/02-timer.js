@@ -9,10 +9,10 @@ const refs = {
   dMinutes: document.querySelector('[data-minutes]'),
   dSeconds: document.querySelector('[data-seconds]'),
 };
-let currentTime = null;
+// let currentTime = null;
 let userTime = null;
 refs.startBtn.disabled = true;
-let deltaTime = null;
+// let deltaTime = null;
 
 class Timer {
   constructor({ onTick }) {
@@ -26,14 +26,35 @@ class Timer {
     }
     this.isActive = true;
     this.intervalID = setInterval(() => {
-      currentTime = Date.now();
-      deltaTime = convertMs(userTime - currentTime);
+      let currentTime = Date.now();
+
+      let deltaTime = this.convertMs(userTime - currentTime);
       this.onTick(deltaTime);
     }, 1000);
   }
   // stop() {
   //   clearInterval(this.intervalID);
   // }
+
+  convertMs(ms) {
+    // Number of milliseconds per unit of time
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+    // Remaining days
+    const days = addLeadingZero(Math.floor(ms / day));
+    // Remaining hours
+    const hours = addLeadingZero(Math.floor((ms % day) / hour));
+    // Remaining minutes
+    const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
+    // Remaining seconds
+    const seconds = addLeadingZero(
+      Math.floor((((ms % day) % hour) % minute) / second)
+    );
+
+    return { days, hours, minutes, seconds };
+  }
 }
 
 const timer = new Timer({ onTick: updateClockFace });
@@ -46,26 +67,6 @@ function updateClockFace(time) {
   refs.dHours.textContent = `${hours}`;
   refs.dMinutes.textContent = `${minutes}`;
   refs.dSeconds.textContent = `${seconds}`;
-}
-
-function convertMs(ms) {
-  // Number of milliseconds per unit of time
-  const second = 1000;
-  const minute = second * 60;
-  const hour = minute * 60;
-  const day = hour * 24;
-  // Remaining days
-  const days = addLeadingZero(Math.floor(ms / day));
-  // Remaining hours
-  const hours = addLeadingZero(Math.floor((ms % day) / hour));
-  // Remaining minutes
-  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
-  // Remaining seconds
-  const seconds = addLeadingZero(
-    Math.floor((((ms % day) % hour) % minute) / second)
-  );
-
-  return { days, hours, minutes, seconds };
 }
 
 function addLeadingZero(value) {
