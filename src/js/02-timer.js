@@ -9,7 +9,7 @@ const refs = {
   dMinutes: document.querySelector('[data-minutes]'),
   dSeconds: document.querySelector('[data-seconds]'),
 };
-let currentTime = null;
+// let currentTime = null;
 let userTime = null;
 refs.startBtn.disabled = true;
 // let deltaTime = null;
@@ -79,7 +79,7 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    currentTime = Date.now();
+    let currentTime = Date.now();
     if (currentTime > selectedDates[0]) {
       alert('Please choose a date in the future');
       refs.startBtn.disabled = true;
