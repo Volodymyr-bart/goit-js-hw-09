@@ -9,7 +9,7 @@ const refs = {
   dMinutes: document.querySelector('[data-minutes]'),
   dSeconds: document.querySelector('[data-seconds]'),
 };
-// let currentTime = null;
+let currentTime = null;
 let userTime = null;
 refs.startBtn.disabled = true;
 // let deltaTime = null;
@@ -27,7 +27,8 @@ class Timer {
     this.isActive = true;
     this.intervalID = setInterval(() => {
       let currentTime = Date.now();
-
+      console.log(userTime);
+      console.log(currentTime);
       let deltaTime = this.convertMs(userTime - currentTime);
       this.onTick(deltaTime);
     }, 1000);
