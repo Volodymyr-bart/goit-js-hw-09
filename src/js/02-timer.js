@@ -25,12 +25,16 @@ class Timer {
       return;
     }
     this.isActive = true;
+    // clearInterval(this.intervalID);
+
     this.intervalID = setInterval(() => {
       let currentTime = Date.now();
       console.log(userTime);
       console.log(currentTime);
-      let deltaTime = this.convertMs(userTime - currentTime);
-      this.onTick(deltaTime);
+      if (!userTime) {
+        let deltaTime = this.convertMs(userTime - currentTime);
+        this.onTick(deltaTime);
+      }
     }, 1000);
   }
   // stop() {
@@ -58,21 +62,6 @@ class Timer {
   }
 }
 
-const timer = new Timer({ onTick: updateClockFace });
-
-refs.startBtn.addEventListener('click', timer.start());
-
-function updateClockFace(time) {
-  const { days, hours, minutes, seconds } = time;
-  refs.dDays.textContent = `${days}`;
-  refs.dHours.textContent = `${hours}`;
-  refs.dMinutes.textContent = `${minutes}`;
-  refs.dSeconds.textContent = `${seconds}`;
-}
-
-function addLeadingZero(value) {
-  return String(value).padStart(2, `0`);
-}
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -84,10 +73,28 @@ const options = {
       alert('Please choose a date in the future');
       refs.startBtn.disabled = true;
     }
+    if (selectedDates < 0) {
+      return;
+    }
     userTime = selectedDates[0];
     refs.startBtn.disabled = false;
     // deltaTime = convertMs(selectedDates[0] - currentTime);
   },
 };
+const updateClockFace = time => {
+  const { days, hours, minutes, seconds } = time;
+  refs.dDays.textContent = `${days}`;
+  refs.dHours.textContent = `${hours}`;
+  refs.dMinutes.textContent = `${minutes}`;
+  refs.dSeconds.textContent = `${seconds}`;
+};
 
 const libFp = flatpickr('#datetime-picker', options);
+
+const timer = new Timer({ onTick: updateClockFace });
+
+refs.startBtn.addEventListener('click', timer.start());
+
+function addLeadingZero(value) {
+  return String(value).padStart(2, `0`);
+}
