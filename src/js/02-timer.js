@@ -31,9 +31,14 @@ class Timer {
       let currentTime = Date.now();
       console.log(userTime);
       console.log(currentTime);
-      if (!userTime) {
+      if (userTime) {
         let deltaTime = this.convertMs(userTime - currentTime);
-        this.onTick(deltaTime);
+
+        if (deltaTime <= 0) {
+          clearInterval(this.intervalID);
+        } else {
+          this.onTick(deltaTime);
+        }
       }
     }, 1000);
   }
@@ -81,19 +86,31 @@ const options = {
     // deltaTime = convertMs(selectedDates[0] - currentTime);
   },
 };
-const updateClockFace = time => {
+
+function updateClockFace(time) {
   const { days, hours, minutes, seconds } = time;
   refs.dDays.textContent = `${days}`;
   refs.dHours.textContent = `${hours}`;
   refs.dMinutes.textContent = `${minutes}`;
   refs.dSeconds.textContent = `${seconds}`;
-};
+}
+
+// const updateClockFace = time => {
+//   const { days, hours, minutes, seconds } = time;
+//   refs.dDays.textContent = `${days}`;
+//   refs.dHours.textContent = `${hours}`;
+//   refs.dMinutes.textContent = `${minutes}`;
+//   refs.dSeconds.textContent = `${seconds}`;
+// };
 
 const libFp = flatpickr('#datetime-picker', options);
 
 const timer = new Timer({ onTick: updateClockFace });
 
 refs.startBtn.addEventListener('click', timer.start());
+// refs.startBtn.addEventListener('click', () => {
+//   timer.start();
+// });
 
 function addLeadingZero(value) {
   return String(value).padStart(2, `0`);
