@@ -10,37 +10,30 @@ const refs = {
   dSeconds: document.querySelector('[data-seconds]'),
 };
 // let currentTime = null;
-let userTime = null;
+let userTimeMilliseconds = null;
 refs.startBtn.disabled = true;
 // let deltaTime = null;
 
 class Timer {
   constructor({ onTick }) {
-    this.intervalID = null;
-    this.isActive = false;
+    // this.intervalID = null;
+    // this.isActive = false;
     this.onTick = onTick;
   }
   start() {
-    if (this.isActive) {
-      return;
-    }
-    this.isActive = true;
-    // clearInterval(this.intervalID);
-
-    this.intervalID = setInterval(() => {
-      let currentTime = Date.now();
-      console.log(userTime);
-      console.log(currentTime);
-      if (userTime) {
-        let deltaTime = this.convertMs(userTime - currentTime);
-
-        if (deltaTime <= 0) {
-          clearInterval(this.intervalID);
-        } else {
-          this.onTick(deltaTime);
-        }
+    // if (this.isActive) {
+    //   return;
+    // }
+    // this.isActive = true;
+    let currentTime = Date.now();
+    if (userTimeMilliseconds) {
+      let deltaTime = userTimeMilliseconds - currentTime;
+      if (userTimeMilliseconds >= currentTime) {
+        let deltaTimeConvert = this.convertMs(deltaTime);
+        this.onTick(deltaTimeConvert);
+        // } else {
       }
-    }, 1000);
+    }
   }
   // stop() {
   //   clearInterval(this.intervalID);
@@ -78,12 +71,11 @@ const options = {
       alert('Please choose a date in the future');
       refs.startBtn.disabled = true;
     }
-    if (selectedDates < 0) {
-      return;
-    }
-    userTime = selectedDates[0];
+    let userTime = selectedDates[0];
+    // userTimeMilliseconds = userTime.getMilliseconds();
+    // userTimeMilliseconds = userTime.getUTCMilliseconds();
+    userTimeMilliseconds = userTime[Symbol.toPrimitive]('number');
     refs.startBtn.disabled = false;
-    // deltaTime = convertMs(selectedDates[0] - currentTime);
   },
 };
 
@@ -95,22 +87,15 @@ function updateClockFace(time) {
   refs.dSeconds.textContent = `${seconds}`;
 }
 
-// const updateClockFace = time => {
-//   const { days, hours, minutes, seconds } = time;
-//   refs.dDays.textContent = `${days}`;
-//   refs.dHours.textContent = `${hours}`;
-//   refs.dMinutes.textContent = `${minutes}`;
-//   refs.dSeconds.textContent = `${seconds}`;
-// };
-
 const libFp = flatpickr('#datetime-picker', options);
 
 const timer = new Timer({ onTick: updateClockFace });
 
-refs.startBtn.addEventListener('click', timer.start());
-// refs.startBtn.addEventListener('click', () => {
-//   timer.start();
-// });
+refs.startBtn.addEventListener('click', () => {
+  let intervalID = setInterval(() => {
+    timer.start();
+  }, 1000);
+});
 
 function addLeadingZero(value) {
   return String(value).padStart(2, `0`);
